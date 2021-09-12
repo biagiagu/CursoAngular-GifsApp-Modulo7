@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,9 @@ export class GifsService {
 	   return [...this._historial]
    }
    
+   constructor( private http: HttpClient){
+
+   }
 
    buscarGifs( query:string ='' ){
 
@@ -21,16 +25,8 @@ export class GifsService {
 		if (this._historial.length>10){
       this._historial.pop();
     }
+    
     query=query.trim().toLowerCase();
-
-    //Verificamos que no se guarden items repetidos ni valores en cero antes de agregar el item al historial
-    // if (this._historial.find(e => e === query)){
-    //   console.log("Este elemento ya fue añadido");
-    // }else if (query.trim().length === 0) {
-    //   console.log("No hay ningun dato para guardar");
-    // }else{
-    //   this._historial.unshift(query);
-    // }
 
     if (query.length !== 0){
       if (!this._historial.includes(query)) {
@@ -39,7 +35,11 @@ export class GifsService {
       }
     }
 
-		console.log(this._historial);
+    this.http.get('https://api.giphy.com/v1/gifs/search?api_key=vQT46CKTXInn2jQrj3RvOjo2NsP0YakU&q=dragon ball z&limit=50')
+		.subscribe((resp:any)=>{
+			console.log(resp.data);
+		});
+		//console.log(this._historial);
 
    }
 }
